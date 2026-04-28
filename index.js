@@ -20,7 +20,6 @@ app.get("/", async(req,res) => {
 
 
 app.post("/signup", async(req,res) => {
-    console.log(req.body)
 
     try {
             const user = new User(req.body.name, req.body.password)
