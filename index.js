@@ -2,9 +2,12 @@ const express = require("express")
 const User = require("./models/user")
 const Post = require("./models/post")
 require("dotenv").config();
+const crypto = require('bcrypt')
 const { neon } = require("@neondatabase/serverless");
 const app = express()
 app.use(express.json())
+
+
 
 const sql = neon(process.env.DATABASE_URL);
 
@@ -16,15 +19,19 @@ app.get("/", async(req,res) => {
 
 
 
-app.post("/Signup", async(req,res) => {
+app.post("/signup", async(req,res) => {
     console.log(req.body)
-    if (req.body) {
-        const user = new User(req.body.name, req.body.password)
-        const result = await sql`INSERT INTO users (username, passwords) VALUES (${user.name}, ${user.password})`
-        res.send(result)
+
+    try {
+            const user = new User(req.body.name, req.body.password)
+            crypto.hash(user.password, 12, async (err, hash) => {
+            const result = await sql`INSERT INTO users (username, passwords) VALUES (${user.name}, ${hash})`
+            res.send(result)
+        })
+    } catch (error) {
+         console.log(error)
+        res.status(500).send(`${error}`)
         
-    } else {
-        res.send("error from: ", req.path)
     }
 })
 
