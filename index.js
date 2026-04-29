@@ -34,6 +34,19 @@ app.post("/signup", async(req,res) => {
     }
 })
 
+app.post("/login", async (req,res) => {
+    try {
+        const loginData = req.body
+        const response = await sql`SELECT * FROM users WHERE username=${loginData.name}`
+        crypto.compare(loginData.password, response[0].passwords, async(err, result) => {
+            res.send("done")
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(`${error}`)
+    }
+})
+
 
 app.post("/Posts/add", (req,res) => {
     if (req.body) {
