@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest ./tests",
-    "dev": "nodemon ."
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "neon": "^2.0.0",
     "nodemon": "^3.1.14"
   },

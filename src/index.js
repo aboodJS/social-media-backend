@@ -1,6 +1,6 @@
 const express = require("express")
-const User = require("./models/user")
-const Post = require("./models/post")
+const User = require("../models/user")
+const Post = require("../models/post")
 require("dotenv").config();
 const crypto = require('bcrypt')
 const { neon } = require("@neondatabase/serverless");
