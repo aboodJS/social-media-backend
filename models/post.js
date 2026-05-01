@@ -1,8 +1,7 @@
 class Post {
-    constructor(title, postBody, score) {
+    constructor(title, postBody) {
         this.title = title
-        this.postBody = postBody,
-        this.score = score
+        this.postBody = postBody
     }
 }
 

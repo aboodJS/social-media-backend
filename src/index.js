@@ -48,12 +48,24 @@ app.post("/login", async (req,res) => {
 })
 
 
-app.post("/Posts/add", (req,res) => {
-    if (req.body) {
-        const post = new Post(req.body.title, req.body.postBody, req.body.score)
+app.post("/posts/add", async (req,res) => {
+    try {
+        const post = new Post(req.body.title, req.body.postBody)
+        const result = await sql`INSERT INTO posts (title, body) VALUES (${post.title}, ${post.postBody})`
         res.send(post)
-    } else {
-        res.send('error from: ', req.path)
+        
+    } catch (error) {
+        res.send(`error: ${error}`)
+        
+    }
+})
+
+app.get('/posts', async (req,res) => {
+    try {
+        const result = await sql`SELECT * FROM posts`
+        res.send(result)
+    } catch (error) {
+        res.send(`error: ${error}`)
     }
 })
 
