@@ -1,6 +1,7 @@
 const express = require("express")
 const User = require("../models/user")
 const Post = require("../models/post")
+const auth = require('./auth')
 require("dotenv").config();
 const cors = require("cors")
 const crypto = require('bcrypt')
@@ -42,8 +43,14 @@ app.post("/login", async (req,res) => {
         const loginData = req.body
         const response = await sql`SELECT * FROM users WHERE username=${loginData.name}`
         crypto.compare(loginData.password, response[0].passwords, async(err, result) => {
-            res.send("done")
+            if (result === true) {
+                const token = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "15m")
+                res.json({token: token})   
+            }else {
+                res.send("wrong password")
+            }
         })
+
     } catch (error) {
         console.log(error)
         res.status(500).send(`${error}`)

@@ -19,3 +19,5 @@ function verifyToken(token, key) {
         return error
     }
 }
+
+module.exports = {createToken, verifyToken}
