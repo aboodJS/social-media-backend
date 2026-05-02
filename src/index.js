@@ -2,10 +2,13 @@ const express = require("express")
 const User = require("../models/user")
 const Post = require("../models/post")
 require("dotenv").config();
+const cors = require("cors")
 const crypto = require('bcrypt')
 const { neon } = require("@neondatabase/serverless");
 const app = express()
 app.use(express.json())
+app.use(cors())
+
 
 
 
