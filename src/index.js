@@ -41,13 +41,14 @@ app.post("/signup", async(req,res) => {
 app.post("/login", async (req,res) => {
     try {
         const loginData = req.body
-        const response = await sql`SELECT * FROM users WHERE username=${loginData.name}`
+        console.log(loginData)
+        const response = await sql`SELECT * FROM users WHERE username=${loginData.name.trim()}`
         crypto.compare(loginData.password, response[0].passwords, async(err, result) => {
             if (result === true) {
                 const token = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "15m")
                 res.json({token: token})   
             }else {
-                res.send("wrong password")
+                res.send({"msg": "wrong password"})
             }
         })
 

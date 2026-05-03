@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 
 function createToken (body, key, exp) {
     try {
-        const token = jwt.sign(body, key, { expiresIn: exp})
+        const token = jwt.sign(body, key, { expiresIn: exp })
         return token
         
     } catch (error) {
@@ -19,5 +19,6 @@ function verifyToken(token, key) {
         return error
     }
 }
+
 
 module.exports = {createToken, verifyToken}
