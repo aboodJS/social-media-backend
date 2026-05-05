@@ -2,20 +2,23 @@ const express = require("express")
 const User = require("../models/user")
 const Post = require("../models/post")
 const auth = require('./auth')
+const middleWare = require("./middleware")
 require("dotenv").config();
 const cors = require("cors")
 const crypto = require('bcrypt')
+const cookieParser = require('cookie-parser')
 const { neon } = require("@neondatabase/serverless");
+const logData = require("./middleware")
 const app = express()
 app.use(express.json())
 app.use(cors())
-
+app.use(cookieParser())
 
 
 
 const sql = neon(process.env.DATABASE_URL);
 
-app.get("/", async(req,res) => {
+app.get("/", logData,async(req,res) => {
     const result = await sql`SELECT * FROM users`;
     res.send(`test response: ${JSON.stringify(result)}`)
 })
