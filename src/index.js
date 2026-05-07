@@ -5,7 +5,7 @@ const auth = require('./auth')
 require("dotenv").config();
 const cors = require("cors")
 const crypto = require('bcrypt')
-const cookieParser = require('cookie-parser')
+const cookieParser = require("cookie-parser")
 const { neon } = require("@neondatabase/serverless");
 const checkToken = require("./middleware")
 const app = express()
@@ -14,6 +14,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+
 
 
 
@@ -45,11 +46,12 @@ app.post("/signup", async(req,res) => {
 app.post("/login", async (req,res) => {
     try {
         const loginData = req.body
-        console.log(loginData)
         const response = await sql`SELECT * FROM users WHERE username=${loginData.name.trim()}`
         crypto.compare(loginData.password, response[0].passwords, async(err, result) => {
             if (result === true) {
                 const token = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "15m")
+                const refreshToken = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "7d")
+                res.cookie("refresh-token", refreshToken, { httpOnly: true })
                 res.json({token: token})   
             }else {
                 res.send({"msg": "wrong password"})
