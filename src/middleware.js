@@ -5,14 +5,22 @@ require("dotenv").config();
 function checkToken(req, res, next) {
     try {
         console.log(req.cookies)
-        const result = jsonwebtoken.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)
-        console.log("verified")
-        next()
+        const result = jsonwebtoken.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY, function (err, decoded) {
+            if (!err) {
+                console.log(decoded)
+                next()
+            } else {
+                console.log(err)
+                res.json({msg: `${err}`})
+            }
+        })
     } catch (error) {
         console.log(error)
-        res.send("session expired!")
+        res.json({msg: "session expired!"})
     }
     
 }
+
+
 
 module.exports = checkToken

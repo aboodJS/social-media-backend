@@ -12,8 +12,9 @@ const app = express()
 
 
 app.use(express.json())
-app.use(cors())
 app.use(cookieParser())
+app.use(cors({credentials: true, origin: "http://localhost:5173"}))
+
 
 
 
@@ -51,16 +52,16 @@ app.post("/login", async (req,res) => {
             if (result === true) {
                 const token = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "15m")
                 const refreshToken = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "7d")
-                res.cookie("refresh-token", refreshToken, { httpOnly: true })
-                res.json({token: token})   
+                
+                res.json({token: token, cookie: refreshToken})   
             }else {
-                res.send({"msg": "wrong password"})
+                res.status(401).send({"msg": "wrong password"})
             }
         })
 
     } catch (error) {
         console.log(error)
-        res.status(500).send(`${error}`)
+        res.status(500).json({msg:`${error}`})
     }
 })
 
@@ -68,12 +69,9 @@ app.post("/login", async (req,res) => {
 app.post("/posts/add", checkToken, async (req,res) => {
     try {
         const post = new Post(req.body.title, req.body.postBody)
-        const result = await sql`INSERT INTO posts (title, body) VALUES (${post.title}, ${post.postBody})`
-        res.send(post)
-        
+        const result = await sql`INSERT INTO posts (title, body) VALUES (${post.title}, ${post.postBody})`        
     } catch (error) {
-        res.send(`error: ${error}`)
-        
+        res.status(500).json({msg: `error: ${error}`})  
     }
 })
 
@@ -82,7 +80,7 @@ app.get('/posts', async (req,res) => {
         const result = await sql`SELECT * FROM posts`
         res.send(result)
     } catch (error) {
-        res.send(`error: ${error}`)
+        res.status(500).json({error: `${error}`})
     }
 })
 
