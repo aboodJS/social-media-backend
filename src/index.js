@@ -48,7 +48,7 @@ app.post("/login", async (req,res) => {
     try {
         const loginData = req.body
         const response = await sql`SELECT * FROM users WHERE username=${loginData.name.trim()}`
-        crypto.compare(loginData.password, response[0].passwords, async(err, result) => {
+        crypto.compare(loginData.password, response[0].password, async(err, result) => {
             if (result === true) {
                 const token = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "15m")
                 const refreshToken = auth.createToken({ username: loginData.name }, process.env.SECRET_KEY, "7d")

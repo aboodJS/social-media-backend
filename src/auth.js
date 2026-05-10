@@ -21,4 +21,15 @@ function verifyToken(token, key) {
 }
 
 
+function createRandomName() {
+    const firstParts = ["monster", "master", "thing"]
+    const secondParts = ["fruit", "carnivour", "pokemon"]
+    const random = Math.round(Math.random() * 2)
+
+    return `${firstParts[random]}${secondParts[random]}`
+}
+
+console.log(createRandomName(3))
+
+
 module.exports = {createToken, verifyToken}
